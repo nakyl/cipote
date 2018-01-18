@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <context id="context1">
+    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/cipote" driverClass="org.postgresql.Driver" password="admin" userId="postgres" />
+    <javaModelGenerator targetPackage="com.model" targetProject="cipote" />
+    <sqlMapGenerator targetPackage="com.mapper" targetProject="cipote" />
+    <javaClientGenerator targetPackage="com.client" targetProject="cipote" type="XMLMAPPER" />
+    <table tableName="coin" enableCountByExample="false" enableDeleteByExample="false" 
+    	   enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" 
+           selectByExampleQueryId="false" enableSelectByExample="false"></table>
+    <table tableName="exchange" enableCountByExample="false" enableDeleteByExample="false" 
+    	   enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" 
+           selectByExampleQueryId="false" enableSelectByExample="false"></table>
+           
+    <table tableName="coin_by_exchange" enableCountByExample="false" enableDeleteByExample="false" 
+    	   enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" 
+           selectByExampleQueryId="false" enableSelectByExample="false"></table>
+    <table tableName="quotation" enableCountByExample="false" enableDeleteByExample="false" 
+    	   enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" 
+           selectByExampleQueryId="false" enableSelectByExample="false"></table>
+               <table tableName="exchange_api" enableCountByExample="false" enableDeleteByExample="false" 
+    	   enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" 
+           selectByExampleQueryId="false" enableSelectByExample="false"></table>
+               <table tableName="coin_per_user" enableCountByExample="false" enableDeleteByExample="false" 
+    	   enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" 
+           selectByExampleQueryId="false" enableSelectByExample="false"></table>
+               <table tableName="user" enableCountByExample="false" enableDeleteByExample="false" 
+    	   enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" 
+           selectByExampleQueryId="false" enableSelectByExample="false"></table>
+               <table tableName="user_group" enableCountByExample="false" enableDeleteByExample="false" 
+    	   enableUpdateByExample="false" selectByPrimaryKeyQueryId="false" 
+           selectByExampleQueryId="false" enableSelectByExample="false"></table>
+  </context>
+</generatorConfiguration>
