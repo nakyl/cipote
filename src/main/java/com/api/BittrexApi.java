@@ -8,24 +8,20 @@ import java.util.List;
 import javax.websocket.ClientEndpoint;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.client.RestTemplate;
 
 import com.client.CoinByExchangeMapper;
 import com.client.CoinPerUserMapper;
 import com.client.QuotationMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsonmodel.PriceBittrex;
 import com.jsonmodel.PriceChart;
 import com.main.CalcSatoshis;
 import com.main.UserOnline;
-import com.model.Coin;
 import com.model.CoinByExchange;
 import com.model.Quotation;
 

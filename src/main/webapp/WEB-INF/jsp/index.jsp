@@ -1,18 +1,8 @@
-<!DOCTYPE html>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page contentType="text/html; charset=UTF-8"%>
-<html lang="es">
-<head>
-<link rel="stylesheet" href="../css/bootstrap/bootstrap.min.css">
 
-<script src="../js/jquery-3.2.1.min.js"></script>
-<script src="../js/bootstrap/bootstrap.min.js"></script>
-<script src="https://github.highcharts.com/master/highstock.src.js"></script>
-<script
-	src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<jsp:include page="header.jsp" />
 
 <script>
 $(document).ready(function() {
@@ -59,15 +49,15 @@ function test () {
 	        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
 	        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
 	    },
+
 	    series: [{
-	        name: 'Brands',
 	        colorByPoint: true,
 	        data: [
 	        	<c:forEach items="${crypto}" varStatus="item">
 	        	{
-		            name: '${item.current.coinByExchange.coin.name}',
+		            name: '${item.current.coinByExchange.coin.formatedName}',
 		            y: ${item.current.invested},
-		            drilldown: '${item.current.coinByExchange.coin.name}'
+		            drilldown: '${item.current.coinByExchange.coin.formatedName}'
 		        },
 		        </c:forEach>
 		    ]
@@ -76,7 +66,7 @@ function test () {
     
     var messageList = $("#messages");
 	<c:forEach items="${crypto}" varStatus="item">
-	var chart${item.index} = createChart(${item.index}, ${item.current.coinByExchange.coin.id}, ${item.current.coinByExchange.exchange.id}, "${item.current.coinByExchange.coin.name}");
+	var chart${item.index} = createChart(${item.index}, ${item.current.coinByExchange.coin.id}, ${item.current.coinByExchange.exchange.id}, "${item.current.coinByExchange.coin.formatedName}");
     </c:forEach>
 }
 
@@ -210,10 +200,6 @@ function createChart(idContainer, idCrypto, idExchange, name) {
 }
 
 </script>
-
-</head>
-<body>
-	<div class="container-fluid">
 		<div class="row">
 			<c:forEach items="${crypto}" varStatus="item">
 				<div id="prices${item.current.coinByExchange.coin.id}"
@@ -230,7 +216,4 @@ function createChart(idContainer, idCrypto, idExchange, name) {
 		<div class="row">
 			<div id="balance" class="col-sm-12"></div>
 		</div>
-	</div>
-</body>
-
-</html>
+<jsp:include page="footer.jsp" />

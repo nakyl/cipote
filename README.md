@@ -1,2 +1,3 @@
-# cipote
+# Cipote [![Build Status](https://travis-ci.org/nakyl/cipote.svg?branch=master)](https://travis-ci.org/nakyl/cipote) [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/nakyl/cipote.svg)](http://isitmaintained.com/project/nakyl/cipote "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/nakyl/cipote.svg)](http://isitmaintained.com/project/nakyl/cipote "Percentage of issues still open") [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=org.springframework.boot:cipote)](https://sonarcloud.io/dashboard?id=org.springframework.boot%3Acipote) [![Technical debt ratio](https://sonarqube.com/api/badges/measure?key=org.springframework.boot:cipote&metric=sqale_debt_ratio)](https://sonarcloud.io/dashboard?id=org.springframework.boot%3Acipote)  
+
 Crypto-investment-personnel-operation-trading-engine

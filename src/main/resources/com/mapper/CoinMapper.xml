@@ -119,4 +119,12 @@
     <include refid="Base_Column_List" />
     from coin
   </select>
+  <select id="searchByName" resultMap="coinMap">
+  	<bind name="pattern" value="'%' + name + '%'" />
+    select 'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from coin
+    where UPPER(name) LIKE UPPER(#{pattern})
+    or UPPER(short_name) LIKE UPPER(#{pattern})
+  </select>
 </mapper>

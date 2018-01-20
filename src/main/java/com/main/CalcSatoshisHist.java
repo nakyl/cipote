@@ -3,7 +3,6 @@ package com.main;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jsonmodel.PriceChart;
 import com.model.CoinPerUser;
-import com.model.Exchange;
 import com.model.Quotation;
 
 public class CalcSatoshisHist {
