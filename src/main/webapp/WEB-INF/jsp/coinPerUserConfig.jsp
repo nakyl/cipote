@@ -100,7 +100,7 @@ var datatable;
 			      })
 			   });
 		   
-		   $('#buyDate').datepicker();
+		   $('#buyDate').datepicker({format: 'dd/mm/yyyy'});
 		
 	});
 	
