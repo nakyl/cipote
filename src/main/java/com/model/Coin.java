@@ -71,4 +71,8 @@ public class Coin {
 	public void setShortName(String shortName) {
 		this.shortName = shortName;
 	}
+	
+	public String getFormatedName() {
+		return name+"("+shortName+")";
+	}
 }

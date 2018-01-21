@@ -2,6 +2,8 @@ package com.client;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.model.Coin;
 
 public interface CoinMapper {
@@ -45,4 +47,6 @@ public interface CoinMapper {
 	Coin selectByName(Coin record);
 	
 	List<Coin> selectAll();
+	
+	List<Coin> searchByName(@Param("name") String name);
 }
