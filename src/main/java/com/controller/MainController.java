@@ -82,13 +82,20 @@ public class MainController extends PrincipalController {
 	    	List<Quotation> quota = quotationMapper.selectByBuyDate(
 	    			coinUser.getCoinByExchange().getCoin(), coinUser.getCoinByExchange().getExchange(), coinUser.getBuyDate());
 	    	
+	    	
+    		Coin coin = new Coin();
+    		coin.setId(1);
+    		Exchange exchange = new Exchange();
+    		exchange.setId(1);
+	    	List<Quotation> btcList = quotationMapper.selectAllByCoinExchange(coin, exchange);
 	    	for (Quotation quotation : quota) {
-	    		Coin coin = new Coin();
-	    		coin.setId(1);
-	    		Exchange exchange = new Exchange();
-	    		exchange.setId(1);
-	    		Quotation btcPrice = quotationMapper.selectCoinByDate(
-	    				coin, exchange, quotation.getTimestamp());
+	    		Quotation btcPrice = null;
+	    		for (Quotation btc : btcList) {
+	    			if(btcPrice == null && (quotation.getTimestamp().equals(btc.getTimestamp()) || 
+	    					quotation.getTimestamp().before(btc.getTimestamp()))) {
+	    				btcPrice = btc;
+	    			}
+				}
 	    		if(btcPrice != null) {
 	    			result.add(new CalcSatoshisHist().calc(coinUser, quotation, btcPrice.getSatoshis().doubleValue()));
 	    		}

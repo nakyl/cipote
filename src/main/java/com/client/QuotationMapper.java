@@ -52,4 +52,6 @@ public interface QuotationMapper {
 	List<Quotation> selectByBuyDate(@Param("coin") Coin coin, @Param("exchange") Exchange exchange, @Param("buyDate") Date buyDate);
 	
 	Quotation selectCoinByDate(@Param("coin") Coin coin, @Param("exchange") Exchange exchange, @Param("buyDate") Date buyDate);
+	
+	List<Quotation> selectAllByCoinExchange(@Param("coin") Coin coin, @Param("exchange") Exchange exchange);
 }
