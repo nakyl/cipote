@@ -42,6 +42,21 @@ function test () {
 	                enabled: true,
 	                format: '{point.name}: {point.y:.1f}€'
 	            }
+	        },
+	        pie: {
+	            allowPointSelect: true,
+	            cursor: 'pointer',
+	            dataLabels: {
+	                enabled: false
+	            },
+	            showInLegend: true,
+	            point: {
+                    events: {
+                        legendItemClick: function () {
+                        	$('#container'+this.id).toggle("slide");
+                        }
+                    }
+                }
 	        }
 	    },
 
@@ -57,16 +72,17 @@ function test () {
 	        	{
 		            name: '${item.current.coinByExchange.coin.formatedName}',
 		            y: ${item.current.invested},
-		            drilldown: '${item.current.coinByExchange.coin.formatedName}'
+		            id: ${item.current.coinByExchange.coin.id}
 		        },
 		        </c:forEach>
-		    ]
+		        
+		    ] 
 	    }]
 	});
     
     var messageList = $("#messages");
 	<c:forEach items="${crypto}" varStatus="item">
-	var chart${item.index} = createChart(${item.index}, ${item.current.coinByExchange.coin.id}, ${item.current.coinByExchange.exchange.id}, "${item.current.coinByExchange.coin.formatedName}");
+	var chart${item.index} = createChart(${item.current.coinByExchange.coin.id}, ${item.current.coinByExchange.coin.id}, ${item.current.coinByExchange.exchange.id}, "${item.current.coinByExchange.coin.formatedName}");
     </c:forEach>
 }
 
@@ -210,7 +226,7 @@ function createChart(idContainer, idCrypto, idExchange, name) {
 		<div class="row">
 			<div id="total" class="col-sm-4"></div>
 			<c:forEach items="${crypto}" varStatus="item">
-				<div id="container${item.index}" class="col-sm-4"></div>
+				<div id="container${item.current.coinByExchange.coin.id}" class="col-sm-4"></div>
 			</c:forEach>
 		</div>
 		<div class="row">
