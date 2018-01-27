@@ -65,7 +65,7 @@ var datatable;
 					"render": function (data) {
 			        	var date = new Date(data);
 			        	var month = date.getMonth() + 1;
-			        	return (month.length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
+			        	return date.getDate() + "/" + (month.length > 1 ? month : "0" + month) + "/" + date.getFullYear();
 			    	} 
 				},				
 				{ "mData": "id",

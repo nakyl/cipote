@@ -1,11 +1,9 @@
 package com.main;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 
 import com.client.CoinPerUserMapper;
 import com.client.QuotationMapper;
@@ -18,6 +16,7 @@ import com.model.CoinPerUser;
 import com.model.Exchange;
 import com.model.Quotation;
 
+@Service
 public class CalcSatoshis {
 	
 	public void last(List<String> list, Quotation record, Integer idExchange, Integer idCrypto, CoinPerUserMapper service, QuotationMapper quotationMapper, SimpMessagingTemplate webSocket) throws JsonProcessingException {
@@ -38,7 +37,7 @@ public class CalcSatoshis {
 		// CALCULO
 		// TOTAL (UNIDADES MONEDA * (SATOSHIS ACTUALES RESULTADO API) * PRECIO BTC) - INVERTIDO
 		for (String userLogin : list) {
-			List<CoinPerUser> listCoinPerUser = getTotalsGroupedByCoin(service, userLogin, idCrypto, idExchange);
+			List<CoinPerUser> listCoinPerUser = service.selectByUserCryptoExcange(userLogin, idCrypto, idExchange);
 			for (CoinPerUser coinPerUser : listCoinPerUser) {
 				if(coinPerUser.getCoinByExchange().getCoin().getId().equals(idCrypto) && 
 						coinPerUser.getCoinByExchange().getExchange().getId().equals(idExchange)) {
@@ -50,6 +49,8 @@ public class CalcSatoshis {
 							btcPrice.getSatoshis().doubleValue()) 
 							- coinPerUser.getInvested().doubleValue();
 					
+					
+					
 					resultToChart.setPrice(price);
 					resultToChart.setTime(record.getTimestamp().getTime());
 					resultToChart.setIdCrypto(idCrypto);
@@ -60,28 +61,5 @@ public class CalcSatoshis {
 				}
 			}
 		}
-	}
-	
-	private List<CoinPerUser> getTotalsGroupedByCoin(CoinPerUserMapper mapper, String user, Integer idCrypto, Integer idExchange) {
-		List<CoinPerUser> totalsByCoin = mapper.selectByUserCryptoExcange(user, idCrypto, idExchange);
-		Map<Integer, CoinPerUser> coinsMap = new HashMap<>();
-		
-		for (CoinPerUser coin:totalsByCoin) {
-			if (coinsMap.containsKey(coin.getCoinByExchange().getCoin().getId())) {
-				CoinPerUser innerCoin = coinsMap.get(coin.getCoinByExchange().getCoin().getId());
-				coin.setQuantity(coin.getQuantity().add(innerCoin.getQuantity()));
-				coin.setSatoshiBuy(coin.getSatoshiBuy().add(innerCoin.getSatoshiBuy()).divide(new BigDecimal(2)));
-				coin.setInvested(coin.getInvested().add(innerCoin.getInvested()));
-				
-			}			
-			coinsMap.put(coin.getCoinByExchange().getCoin().getId(), coin);
-		}
-		
-		totalsByCoin.clear();
-		for (CoinPerUser entry:coinsMap.values()) {
-			totalsByCoin.add(entry);
-		}
-		
-		return totalsByCoin;
 	}
 }
