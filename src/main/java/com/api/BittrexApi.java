@@ -39,7 +39,7 @@ public class BittrexApi {
 	@Autowired
 	private SimpMessagingTemplate webSocket;
 	
-	static final String BASE_API = "https://bittrex.com/api/v1.1/";
+	static final String BASE_API = "https://bittrex.com/api/v1.1";
 	private String lastPrice = "0";
 
 	@Scheduled(cron = "*/10 * * * * *")

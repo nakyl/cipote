@@ -4,6 +4,29 @@
 
 <jsp:include page="header.jsp" />
 
+<style>
+#navbar {
+    position: fixed;
+    z-index:1;
+}
+
+@keyframes shadowPulse2 {
+    0% {
+        box-shadow: inset 0px 0px 10px 0px hsla(238, 65%, 50%, 1);
+    }
+
+    100% {
+        box-shadow: inset 0px 0px 5px 0px hsla(0, 0%, 0%, 0);
+    }
+}
+
+.shadow-pulse {
+    animation-name: shadowPulse2;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+}
+</style>
 <script>
 $(document).ready(function() {
 	Highcharts.setOptions({
@@ -19,6 +42,20 @@ $(document).ready(function() {
 	        ]
 	    }
 	});
+	
+    $("#navbar div a").on('click', function(e) {
+
+        // prevent default anchor click behavior
+        e.preventDefault();
+        
+       	var id = this.toString().split("#").pop();
+       	window.location.hash = this.hash;
+       	
+        $("#"+id).addClass('shadow-pulse');
+       	$("#"+id).on('animationend', function(){     
+       		$("#"+id).removeClass('shadow-pulse');
+       	});
+     });
 	
     test();
 });
@@ -90,7 +127,7 @@ function createChart(idContainer, idCrypto, idExchange, name) {
     var groupingUnits = [
         [
             'minute', // unit name
-        [60] // allowed multiples
+        	[60] // allowed multiples
         ],
         [
             'day', [1]],
@@ -115,13 +152,21 @@ function createChart(idContainer, idCrypto, idExchange, name) {
 		        	processed_json.push([data[i].time, data[i].price]);
 		        }
 		        var options = {
-		                
-		                chart: {
-		                    renderTo: 'container'+idContainer,
-                   rangeSelector: {
-                       inputDateFormat: '%d-%m-%Y %H:%M'
-                   },
-                   type: 'line'
+		           chart: {
+		           		renderTo: 'container'+idContainer,
+                   		rangeSelector: {
+                       		inputDateFormat: '%d-%m-%Y %H:%M'
+                   		},
+                   type: 'line',
+                   zoomType: 'x',
+                   events: {
+                	   selection: function(event) {
+                		    console.log(
+                		        Highcharts.dateFormat('%d-%m-%Y %H:%M:%S', event.xAxis[0].min),
+                		        Highcharts.dateFormat('%d-%m-%Y %H:%M:%S', event.xAxis[0].max)
+                		    );
+                		}
+                	}
                },
                legend: {
                    enabled: true,
@@ -156,7 +201,7 @@ function createChart(idContainer, idCrypto, idExchange, name) {
                },
                rangeSelector: {
                    inputEnabled: false,
-                   selected: 2,
+                   selected: 5,
                    buttons: [{
                        type: 'minute',
                        count: 60,
@@ -203,8 +248,13 @@ function createChart(idContainer, idCrypto, idExchange, name) {
 		                var message = data.body;
 		                
 		                var obj = JSON.parse(message);
-		                $("#prices"+idCrypto).empty();
-		                $("#prices"+idCrypto).append(name+": " + parseFloat(obj.price).toFixed(2) + "€");
+		                $("#stats"+idCrypto).empty();
+		                if(parseFloat(obj.price).toFixed(2) < 0) {
+		                	$("#stats"+idCrypto).append('<span class="text-danger">Balance: '+ parseFloat(obj.price).toFixed(2) + '€</span>');
+		                } else {
+		                	$("#stats"+idCrypto).append('<span class="text-success">Balance: '+ parseFloat(obj.price).toFixed(2) + '€</span>');
+		                }
+		                
 		                chart.series[0].addPoint([obj.time, obj.price]);
 		                chart.redraw();
 		            });
@@ -213,23 +263,41 @@ function createChart(idContainer, idCrypto, idExchange, name) {
 		    }
 	
 	});
+	 
 }
 
 </script>
-		<div class="row">
-			<c:forEach items="${crypto}" varStatus="item">
-				<div id="prices${item.current.coinByExchange.coin.id}"
-					class="col-sm-2"></div>
-			</c:forEach>
+
+<div class="row" style="margin-top:-8px;">
+	<div class="col-2 bg-dark">
+			<nav class="nav navbar-dark navbar-expand-sm" id="navbar">
+			  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdownLeft" aria-controls="navbarNavDropdownLeft" aria-expanded="false" aria-label="Toggle navigation">
+			    <span class="navbar-toggler-icon"></span>
+			  </button>
+				<div class="flex-column mt-md-0 mt-4 pt-md-0 pt-4 collapse navbar-collapse" style="align-items: initial;" id="navbarNavDropdownLeft">
+					<c:forEach items="${crypto}" varStatus="item">
+						<a class="nav-link text-secondary" href="#container${item.current.coinByExchange.coin.id}">
+							${item.current.coinByExchange.coin.formatedName}
+							<div class="small pl-3">
+								<div class="text-primary">Invertido: ${item.current.invested}€</div>
+								<div class="text-info">Cantidad: ${item.current.quantity}</div>
+								<div id="stats${item.current.coinByExchange.coin.id}"></div>
+							</div>
+						</a>
+					</c:forEach>
+				</div>
+			</nav>
+	</div>
+	
+	<div class="col-10">
+		<div id="content" data-spy="scroll" data-target="#navbar">				
+			<div class="row">
+				<div id="total" class="col-sm-12"></div>
+				<c:forEach items="${crypto}" varStatus="item">
+					<div id="container${item.current.coinByExchange.coin.id}" class="pt-2 pl-2 pr-2 pb-2 col-sm-12"></div>
+				</c:forEach>
+			</div>
 		</div>
-		<hr />
-		<div class="row">
-			<div id="total" class="col-sm-4"></div>
-			<c:forEach items="${crypto}" varStatus="item">
-				<div id="container${item.current.coinByExchange.coin.id}" class="col-sm-4"></div>
-			</c:forEach>
-		</div>
-		<div class="row">
-			<div id="balance" class="col-sm-12"></div>
-		</div>
+	</div>
+</div>
 <jsp:include page="footer.jsp" />

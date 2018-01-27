@@ -20,6 +20,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="../js/bootstrap-datepicker-1.7.0-dev/bootstrap-datepicker.js"></script>
 <script src="../js/bootstrap-datepicker-1.7.0-dev/bootstrap-datepicker.es.min.js" charset="UTF-8"></script>
+<script src="//cdn.jsdelivr.net/jquery.shadow-animation/1/mainfile"></script>
 
 <script>
 $(document).ready(function() {
@@ -67,9 +68,6 @@ $(document).ready(function() {
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/coinPerUserConfig">Configuración</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="coinByExchangeTest">Test</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

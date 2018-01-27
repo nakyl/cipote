@@ -63,10 +63,10 @@
 			<if test="id != null">
 				id,
 			</if>
-			<if test="idCoin != null">
-				id_Coin,
+			<if test="coin.id != null">
+				id_coin,
 			</if>
-			<if test="idExchange != null">
+			<if test="exchange.id != null">
 				id_exchange,
 			</if>
 			<if test="apiName != null">
@@ -77,11 +77,11 @@
 			<if test="id != null">
 				#{id,jdbcType=INTEGER},
 			</if>
-			<if test="idCoin != null">
-				#{idCoin,jdbcType=INTEGER},
+			<if test="coin.id != null">
+				#{coin.id,jdbcType=INTEGER},
 			</if>
-			<if test="idExchange != null">
-				#{idExchange,jdbcType=INTEGER},
+			<if test="exchange.id != null">
+				#{exchange.id,jdbcType=INTEGER},
 			</if>
 			<if test="apiName != null">
 				#{apiName,jdbcType=VARCHAR},
