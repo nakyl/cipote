@@ -32,6 +32,4 @@ public class CoinPerUserConfigResponse {
 	public void setErrorMessages(Map<String, String> errorMessages) {
 		this.errorMessages = errorMessages;
 	}
-
-	// Getter and Setter methods
 }

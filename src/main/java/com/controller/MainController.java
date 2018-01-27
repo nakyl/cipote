@@ -27,7 +27,7 @@ import com.model.Quotation;
 
 @Controller("/")
 public class MainController extends PrincipalController {
-	
+
 	@Autowired
 	private CoinPerUserMapper coinPerUserservice;
 	@Autowired
@@ -39,70 +39,69 @@ public class MainController extends PrincipalController {
 
 	@GetMapping("/")
 	public String welcome(Map<String, Object> model) {
-	    for (CoinPerUser coinUser : coinPerUserservice.selectByUserLogin(getUserName())) {
-	    	quotationMapper.selectByBuyDate(
-	    			coinUser.getCoinByExchange().getCoin(), coinUser.getCoinByExchange().getExchange(), coinUser.getBuyDate());
+		for (CoinPerUser coinUser : coinPerUserservice.selectByUserLogin(getUserName())) {
+			quotationMapper.selectByBuyDate(coinUser.getCoinByExchange().getCoin(),
+					coinUser.getCoinByExchange().getExchange(), coinUser.getBuyDate());
 		}
 		model.put("crypto", coinPerUserservice.selectByUserLogin(getUserName()));
-		
+
 		return "index";
 	}
-	
+
 	@RequestMapping(value = "/configPerUser", method = RequestMethod.GET)
 	public String configPerUser(Map<String, Object> model) {
 		model.put("registroEditado", new CoinPerUser());
-		
+
 		return "coinPerUserConfig";
 	}
-	
+
 	@RequestMapping(value = "/exchangeList", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Exchange> exchangeList(Map<String, Object> model) {
-		
-		
 		return exchangeMapper.selectAll();
 	}
-	
+
 	@RequestMapping(value = "/coinList", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Coin> coinList(Map<String, Object> model, @RequestParam(value = "term[term]", required = false) String name ) {
-		
-		if(!StringUtils.isEmpty(name)) {
+	public List<Coin> coinList(Map<String, Object> model,
+			@RequestParam(value = "term[term]", required = false) String name) {
+
+		if (!StringUtils.isEmpty(name)) {
 			return coinMapper.searchByName(name);
 		}
 		return coinMapper.selectAll();
 	}
-	
+
 	@RequestMapping(value = "/getHistoricData", method = RequestMethod.GET)
 	@ResponseBody
-	public List<PriceChart> welcome(@RequestParam("idCrypto") Integer idCrypto, @RequestParam("idExchange") Integer idExchange) throws JsonProcessingException {
+	public List<PriceChart> welcome(@RequestParam("idCrypto") Integer idCrypto,
+			@RequestParam("idExchange") Integer idExchange) throws JsonProcessingException {
 
-	    List<PriceChart> result = new ArrayList<>();
-	    for (CoinPerUser coinUser : coinPerUserservice.selectByUserCryptoExcange(getUserName(), idCrypto, idExchange)) {
-	    	List<Quotation> quota = quotationMapper.selectByBuyDate(
-	    			coinUser.getCoinByExchange().getCoin(), coinUser.getCoinByExchange().getExchange(), coinUser.getBuyDate());
-	    	
-	    	
-    		Coin coin = new Coin();
-    		coin.setId(1);
-    		Exchange exchange = new Exchange();
-    		exchange.setId(1);
-	    	List<Quotation> btcList = quotationMapper.selectAllByCoinExchange(coin, exchange);
-	    	for (Quotation quotation : quota) {
-	    		Quotation btcPrice = null;
-	    		for (Quotation btc : btcList) {
-	    			if(btcPrice == null && (quotation.getTimestamp().equals(btc.getTimestamp()) || 
-	    					quotation.getTimestamp().before(btc.getTimestamp()))) {
-	    				btcPrice = btc;
-	    			}
+		List<PriceChart> result = new ArrayList<>();
+		for (CoinPerUser coinUser : coinPerUserservice.selectByUserCryptoExcange(getUserName(), idCrypto, idExchange)) {
+			List<Quotation> quota = quotationMapper.selectByBuyDate(coinUser.getCoinByExchange().getCoin(),
+					coinUser.getCoinByExchange().getExchange(), coinUser.getBuyDate());
+
+			Coin coin = new Coin();
+			coin.setId(1);
+			Exchange exchange = new Exchange();
+			exchange.setId(1);
+			List<Quotation> btcList = quotationMapper.selectAllByCoinExchange(coin, exchange);
+			for (Quotation quotation : quota) {
+				Quotation btcPrice = null;
+				for (Quotation btc : btcList) {
+					if (btcPrice == null && (quotation.getTimestamp().equals(btc.getTimestamp())
+							|| quotation.getTimestamp().before(btc.getTimestamp()))) {
+						btcPrice = btc;
+					}
 				}
-	    		if(btcPrice != null) {
-	    			result.add(new CalcSatoshisHist().calc(coinUser, quotation, btcPrice.getSatoshis().doubleValue()));
-	    		}
-	    	}
-	    	
+				if (btcPrice != null) {
+					result.add(new CalcSatoshisHist().calc(coinUser, quotation, btcPrice.getSatoshis().doubleValue()));
+				}
+			}
+
 		}
-		
+
 		return result;
 	}
 

@@ -1,6 +1,5 @@
 package com.controller;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,7 +36,7 @@ import com.model.Exchange;
 @Controller
 @RequestMapping("/coinPerUserConfig")
 public class CoinPerUserConfigController extends PrincipalController {
-	
+
 	@Autowired
 	private CoinPerUserMapper coinPerUserservice;
 	@Autowired
@@ -48,66 +47,64 @@ public class CoinPerUserConfigController extends PrincipalController {
 	private ExchangeMapper exchangeMapper;
 	@Autowired
 	private CoinMapper coinMapper;
-	
+
 	@RequestMapping
 	public String configPerUser(Map<String, Object> model) {
 		model.put("registroEditado", new CoinPerUser());
-		
+
 		return "coinPerUserConfig";
 	}
-	
-	
+
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public List<CoinPerUser> coinPerUserList(Map<String, Object> model) {
 		return coinPerUserservice.selectByUserLogin(getUserName());
 	}
-	
-	
+
 	@PostMapping(value = "/add", produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
-	public CoinPerUserConfigResponse add(@Valid @ModelAttribute("registroEditado") CoinPerUser registroEditado, BindingResult bindingResult) {
-		
+	public CoinPerUserConfigResponse add(@Valid @ModelAttribute("registroEditado") CoinPerUser registroEditado,
+			BindingResult bindingResult) {
+
 		CoinPerUserConfigResponse response = new CoinPerUserConfigResponse();
-		
+
 		if (bindingResult.hasErrors()) {
-	         Map<String, String> errors = bindingResult.getFieldErrors().stream()
-	               .collect(
-	                     Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage)
-	                 );
-	         
-	         response.setValidated(false);
-	         response.setErrorMessages(errors);
+			Map<String, String> errors = bindingResult.getFieldErrors().stream()
+					.collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+
+			response.setValidated(false);
+			response.setErrorMessages(errors);
 		} else {
 
 			// Comprobamos si existe la combinación de moneda y exchange
 			CoinByExchange coinByExchange = coinByExchangeMapper.selectByCoinExchange(
 					registroEditado.getCoinByExchange().getCoin().getId(),
 					registroEditado.getCoinByExchange().getExchange().getId());
-			
-			
-			if(coinByExchange == null) {
+
+			if (coinByExchange == null) {
 				// Obtenemos el nombre del exchange para la api
-				Exchange exchange = exchangeMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getExchange().getId());
-				if("BITTREX".equals(exchange.getName())) {
-					
+				Exchange exchange = exchangeMapper
+						.selectByPrimaryKey(registroEditado.getCoinByExchange().getExchange().getId());
+				if ("BITTREX".equals(exchange.getName())) {
+
 					Coin coin = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoin().getId());
 					RestTemplate restTemplate = new RestTemplate();
-					
-					// Llamamos a la api del exchange, si devuelve price es que este exchange tradea la moneda
+
+					// Llamamos a la api del exchange, si devuelve price es que este exchange tradea
+					// la moneda
 					String url = "https://bittrex.com/api/v1.1";
 					PriceBittrex result = restTemplate.getForObject(
 							url + "/public/getticker?market=BTC-" + coin.getShortName(), PriceBittrex.class);
 
 					if (result.getAdditionalProperties().get("result") != null) {
-						
+
 						CoinByExchange reg = new CoinByExchange();
 						reg.setCoin(coin);
 						reg.setExchange(exchange);
 						reg.setApiName(coin.getShortName() + "BTC");
 						// Insertamos la combinación de moneda/exchange
 						coinByExchangeMapper.insertSelective(reg);
-						
+
 						// Añadimos los datos insertados del usuario
 						registroEditado.setCoinByExchange(reg);
 						registroEditado.setUserInfo(userInfoMapper.selectByLogin(getUserName()));
@@ -119,24 +116,25 @@ public class CoinPerUserConfigController extends PrincipalController {
 						response.setValidated(Boolean.FALSE);
 						// TODO implementar error
 					}
-				} else if("BINANCE".equals(exchange.getName())) {
-					
+				} else if ("BINANCE".equals(exchange.getName())) {
+
 					Coin coin = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoin().getId());
 					RestTemplate restTemplate = new RestTemplate();
-					
-					// Llamamos a la api del exchange, si devuelve price es que este exchange tradea la moneda
+
+					// Llamamos a la api del exchange, si devuelve price es que este exchange tradea
+					// la moneda
 					String url = "https://api.binance.com/api/v1";
 					PriceBinance result = restTemplate.getForObject(
 							url + "/ticker/price?symbol=" + coin.getShortName() + "BTC", PriceBinance.class);
 					if (!StringUtils.isEmpty(result.getAdditionalProperties().get("price").toString())) {
-						
+
 						CoinByExchange reg = new CoinByExchange();
 						reg.setCoin(coin);
 						reg.setExchange(exchange);
 						reg.setApiName(coin.getShortName() + "BTC");
 						// Insertamos la combinación de moneda/exchange
 						coinByExchangeMapper.insertSelective(reg);
-						
+
 						// Añadimos los datos insertados del usuario
 						registroEditado.setCoinByExchange(reg);
 						registroEditado.setUserInfo(userInfoMapper.selectByLogin(getUserName()));
@@ -149,8 +147,7 @@ public class CoinPerUserConfigController extends PrincipalController {
 						// TODO implementar error
 					}
 				}
-				
-				
+
 			} else {
 				// Si la combinación de la moneda/exchange existe añadimos los datos del usuario
 				registroEditado.setCoinByExchange(coinByExchange);
@@ -161,18 +158,17 @@ public class CoinPerUserConfigController extends PrincipalController {
 			}
 
 		}
-	    
-	    return response;
-		
+
+		return response;
+
 	}
-	
-	@RequestMapping(value="/removeValue", method=RequestMethod.POST)
+
+	@RequestMapping(value = "/removeValue", method = RequestMethod.POST)
 	@ResponseBody
 	public void remove(@RequestParam("coinPerUserID") Integer coinPerUserID) {
-	    // TODO añadir seguridad
+		// TODO añadir seguridad
 
-	    coinPerUserservice.deleteByPrimaryKey(coinPerUserID);
+		coinPerUserservice.deleteByPrimaryKey(coinPerUserID);
 	}
-	
 
 }
