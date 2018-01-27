@@ -75,5 +75,4 @@ public class BinanceApi {
 		return new BigDecimal(last);
 
 	}
-
 }

@@ -35,7 +35,7 @@ import com.model.Exchange;
 @Controller
 @RequestMapping("/coinPerUserConfig")
 public class CoinPerUserConfigController extends PrincipalController {
-	
+
 	@Autowired
 	private CoinPerUserMapper coinPerUserservice;
 	@Autowired
@@ -46,27 +46,26 @@ public class CoinPerUserConfigController extends PrincipalController {
 	private ExchangeMapper exchangeMapper;
 	@Autowired
 	private CoinMapper coinMapper;
-	
+
 	@RequestMapping
 	public String configPerUser(Map<String, Object> model) {
 		model.put("registroEditado", new CoinPerUser());
 		return "coinPerUserConfig";
 	}
-	
-	
+
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	@ResponseBody
 	public List<CoinPerUser> coinPerUserList(Map<String, Object> model) {
 		return coinPerUserservice.selectByUserLogin(getUserName());
 	}
-	
-	
+
 	@PostMapping(value = "/add", produces = { MediaType.APPLICATION_JSON_VALUE })
 	@ResponseBody
-	public CoinPerUserConfigResponse add(@Valid @ModelAttribute("registroEditado") CoinPerUser registroEditado, BindingResult bindingResult) {
-		
+	public CoinPerUserConfigResponse add(@Valid @ModelAttribute("registroEditado") CoinPerUser registroEditado,
+			BindingResult bindingResult) {
+
 		CoinPerUserConfigResponse response = new CoinPerUserConfigResponse();
-		
+
 		if (bindingResult.hasErrors()) {
 	         Map<String, String> errors = bindingResult.getFieldErrors().stream()
 	               .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
@@ -79,15 +78,14 @@ public class CoinPerUserConfigController extends PrincipalController {
 			CoinByExchange coinByExchange = coinByExchangeMapper.selectByCoinExchange(
 					registroEditado.getCoinByExchange().getCoin().getId(),
 					registroEditado.getCoinByExchange().getExchange().getId());
-			
-			
-			if(coinByExchange == null) {
-				// Obtenemos el nombre del exchange para la api
-				Exchange exchange = exchangeMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getExchange().getId());
-				if("BITTREX".equals(exchange.getName())) {
-					
-					Coin coin = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoin().getId());
 
+			if (coinByExchange == null) {
+				// Obtenemos el nombre del exchange para la api
+				Exchange exchange = exchangeMapper
+						.selectByPrimaryKey(registroEditado.getCoinByExchange().getExchange().getId());
+				if ("BITTREX".equals(exchange.getName())) {
+
+					Coin coin = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoin().getId());
 					BigDecimal price = new BittrexApi().getPriceCoin(coin.getShortName());
 
 					if (price != null) {
@@ -97,8 +95,8 @@ public class CoinPerUserConfigController extends PrincipalController {
 						response.setValidated(Boolean.FALSE);
 						// TODO implementar error
 					}
-				} else if("BINANCE".equals(exchange.getName())) {
-					
+				} else if ("BINANCE".equals(exchange.getName())) {
+
 					Coin coin = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoin().getId());
 					
 					BigDecimal price = new BinanceApi().getPriceCoin(coin.getShortName());
@@ -111,7 +109,6 @@ public class CoinPerUserConfigController extends PrincipalController {
 						// TODO implementar error
 					}
 				}
-				
 			} else {
 				// Si la combinación de la moneda/exchange existe añadimos los datos del usuario
 				registroEditado.setCoinByExchange(coinByExchange);
@@ -122,9 +119,9 @@ public class CoinPerUserConfigController extends PrincipalController {
 			}
 
 		}
-	    
-	    return response;
-		
+
+		return response;
+
 	}
 
 	private void insertAndResponse(CoinPerUser registroEditado, CoinPerUserConfigResponse response, Exchange exchange,
@@ -147,10 +144,9 @@ public class CoinPerUserConfigController extends PrincipalController {
 	@RequestMapping(value="/removeValue", method=RequestMethod.POST)
 	@ResponseBody
 	public void remove(@RequestParam("coinPerUserID") Integer coinPerUserID) {
-	    // TODO añadir seguridad
+		// TODO añadir seguridad
 
-	    coinPerUserservice.deleteByPrimaryKey(coinPerUserID);
+		coinPerUserservice.deleteByPrimaryKey(coinPerUserID);
 	}
-	
 
 }

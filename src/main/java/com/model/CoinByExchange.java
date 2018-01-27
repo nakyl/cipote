@@ -77,19 +77,46 @@ public class CoinByExchange {
 		this.apiName = apiName;
 	}
 
+	/**
+	 * @return the coin
+	 */
 	public Coin getCoin() {
 		return coin;
 	}
 
+	/**
+	 * @param coin
+	 *            the coin to set
+	 */
 	public void setCoin(Coin coin) {
 		this.coin = coin;
 	}
 
+	/**
+	 * @return the exchange
+	 */
 	public Exchange getExchange() {
 		return exchange;
 	}
 
+	/**
+	 * @param exchange
+	 *            the exchange to set
+	 */
 	public void setExchange(Exchange exchange) {
 		this.exchange = exchange;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("CoinByExchange [id=").append(id).append(", coin=").append(coin).append(", exchange=")
+				.append(exchange).append(", apiName=").append(apiName).append("]");
+		return builder.toString();
 	}
 }

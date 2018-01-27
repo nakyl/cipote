@@ -1,7 +1,6 @@
 package com.interceptor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -9,9 +8,11 @@ import org.springframework.messaging.support.ChannelInterceptorAdapter;
 
 import com.main.UserOnline;
 
+import ch.qos.logback.classic.Logger;
+
 public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
 	 
-    private final Log logger = LogFactory.getLog(PresenceChannelInterceptor.class);
+    private static final Logger LOG = (Logger) LoggerFactory.getLogger(PresenceChannelInterceptor.class);
  
     @Override
     public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
@@ -27,19 +28,26 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
  
         switch(sha.getCommand()) {
             case CONNECT:
-                logger.debug("STOMP Connect [sessionId: " + sessionId + "]");
+            	if (LOG.isDebugEnabled()) {
+            		LOG.debug("STOMP Connect [sessionId: " + sessionId + "]");
+            	}
+            	break;
             case CONNECTED:
-                logger.debug("STOMP Connected [sessionId: " + sessionId + "]");
+            	if (LOG.isDebugEnabled()) {
+            		LOG.debug("STOMP Connected [sessionId: " + sessionId + "]");
+            	}
                 UserOnline.putUser(sha.getUser().getName());
+                LOG.info("User "+sha.getUser().getName()+" connected");
                 break;
             case DISCONNECT:
-                logger.debug("STOMP Disconnect [sessionId: " + sessionId + "]");
+            	if (LOG.isDebugEnabled()) {
+            		LOG.debug("STOMP Disconnect [sessionId: " + sessionId + "]");
+            	}
                 UserOnline.removeUser(sha.getUser().getName());
-                System.out.println("desconecatdo");
+                LOG.info("User "+sha.getUser().getName()+" disconnected");
                 break;
             default:
                 break;
- 
         }
     }
 }
