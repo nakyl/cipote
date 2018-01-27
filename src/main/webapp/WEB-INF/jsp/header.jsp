@@ -20,7 +20,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 <script src="../js/bootstrap-datepicker-1.7.0-dev/bootstrap-datepicker.js"></script>
 <script src="../js/bootstrap-datepicker-1.7.0-dev/bootstrap-datepicker.es.min.js" charset="UTF-8"></script>
-<script src="//cdn.jsdelivr.net/jquery.shadow-animation/1/mainfile"></script>
 
 <script>
 $(document).ready(function() {

@@ -86,14 +86,7 @@ function test () {
 	            dataLabels: {
 	                enabled: false
 	            },
-	            showInLegend: true,
-	            point: {
-                    events: {
-                        legendItemClick: function () {
-                        	$('#container'+this.id).toggle("slide");
-                        }
-                    }
-                }
+	            showInLegend: true
 	        }
 	    },
 
