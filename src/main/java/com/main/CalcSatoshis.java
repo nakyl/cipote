@@ -3,6 +3,7 @@ package com.main;
 import java.util.List;
 
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 
 import com.client.CoinPerUserMapper;
 import com.client.QuotationMapper;
@@ -15,6 +16,7 @@ import com.model.CoinPerUser;
 import com.model.Exchange;
 import com.model.Quotation;
 
+@Service
 public class CalcSatoshis {
 	
 	public void last(List<String> list, Quotation record, Integer idExchange, Integer idCrypto, CoinPerUserMapper service, QuotationMapper quotationMapper, SimpMessagingTemplate webSocket) throws JsonProcessingException {

@@ -19,7 +19,6 @@ import com.client.CoinPerUserMapper;
 import com.client.QuotationMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jsonmodel.PriceBittrex;
-import com.jsonmodel.PriceChart;
 import com.main.CalcSatoshis;
 import com.main.UserOnline;
 import com.model.CoinByExchange;
@@ -40,7 +39,6 @@ public class BittrexApi {
 	private SimpMessagingTemplate webSocket;
 	
 	static final String BASE_API = "https://bittrex.com/api/v1.1";
-	private String lastPrice = "0";
 
 	@Scheduled(cron = "*/10 * * * * *")
 	public void startBittrex() {
@@ -50,33 +48,35 @@ public class BittrexApi {
 		for (CoinByExchange crypto : list) {
 
 			if (crypto.getExchange().getName().equals("BITTREX")) {
-				RestTemplate restTemplate = new RestTemplate();
-				PriceBittrex result = restTemplate
-						.getForObject(BASE_API + "/public/getticker?market=BTC-" + crypto.getCoin().getShortName(), PriceBittrex.class);
 
-				String last = ((LinkedHashMap<String, Object>) result.getAdditionalProperties().get("result"))
-						.get("Last").toString();
-					lastPrice = last;
+					BigDecimal price = getPriceCoin(crypto.getCoin().getShortName());
 					Quotation record = new Quotation();
 					CoinByExchange reg = new CoinByExchange();
 					reg.setCoin(crypto.getCoin());
 					reg.setExchange(crypto.getExchange());
 					record.setCoinByExchange(reg);
-					record.setSatoshis(new BigDecimal(lastPrice));
+					record.setSatoshis(price);
 					record.setTimestamp(new Date());
 					quotationMapper.insertSelective(record);
-					PriceChart price = new PriceChart();
-					price.setPrice(Double.valueOf(lastPrice));
-					price.setTime(new Date().getTime());
 					try {
 						new CalcSatoshis().last(UserOnline.listUserOnline(), record, crypto.getExchange().getId(), crypto.getCoin().getId(), service, quotationMapper, webSocket);
 					} catch (JsonProcessingException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 //				}
 			}
 		}
+	}
+	
+	public BigDecimal getPriceCoin(String coin) {
+		RestTemplate restTemplate = new RestTemplate();
+		PriceBittrex result = restTemplate
+				.getForObject(BASE_API + "/public/getticker?market=BTC-" + coin, PriceBittrex.class);
+		String last = ((LinkedHashMap<String, Object>) result.getAdditionalProperties().get("result"))
+				.get("Last").toString();
+		
+		return new BigDecimal(last);
+
 	}
 
 }
