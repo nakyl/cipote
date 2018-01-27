@@ -17,6 +17,7 @@ import com.client.CoinByExchangeMapper;
 import com.client.CoinPerUserMapper;
 import com.client.QuotationMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.jsonmodel.PriceBinance;
 import com.jsonmodel.PriceBittrex;
 import com.jsonmodel.PriceChart;
 import com.main.CalcSatoshis;
@@ -50,8 +51,8 @@ public class BinanceApi {
 
 			if (crypto.getExchange().getName().equals("BINANCE")) {
 				RestTemplate restTemplate = new RestTemplate();
-				PriceBittrex result = restTemplate
-						.getForObject(BASE_API + "/ticker/price?symbol="+crypto.getCoin().getShortName()+"BTC", PriceBittrex.class);
+				PriceBinance result = restTemplate
+						.getForObject(BASE_API + "/ticker/price?symbol="+crypto.getCoin().getShortName()+"BTC", PriceBinance.class);
 
 				String last = result.getAdditionalProperties().get("price").toString();
 					lastPrice = last;
