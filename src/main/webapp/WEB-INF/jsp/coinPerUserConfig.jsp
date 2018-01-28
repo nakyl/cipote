@@ -50,6 +50,27 @@ var datatable;
 		    }
 		});
 		
+		$('#coinPair').select2({
+		    ajax: {
+		        type: 'get',
+		        url: '/coinList',
+		        dataType: 'json',
+		        
+		        data: function (term) {
+		            return {
+		                term: term
+		            };
+		        },
+		        processResults: function (data, params) {
+		            return {
+		                results: $.map(data, function(obj) {
+		                	return { id: obj.id, text: obj.formatedName };
+		                })
+		            };
+		        }
+		    }
+		});
+		
 		
 		datatable = $('#table_id').DataTable({
 			"sAjaxSource": "/coinPerUserConfig/list",
@@ -57,6 +78,7 @@ var datatable;
 			"order": [[ 0, "asc" ]],
 			"aoColumns": [
 			    { "mData": "coinByExchange.coin.formatedName"},
+			    { "mData": "coinByExchange.coinPair.formatedName"},
 			    { "mData": "coinByExchange.exchange.name"},
 		      	{ "mData": "invested" },
 				{ "mData": "quantity" },
@@ -117,6 +139,7 @@ var datatable;
 			<thead>
 				<tr>
 					<th>Nombre</th>
+					<th>Pair</th>
 					<th>Exchange</th>
 					<th>Invertido</th>
 					<th>Cantidad</th>
@@ -128,6 +151,7 @@ var datatable;
 			<tfoot>
 				<tr>
 					<th>Nombre</th>
+					<th>Pair</th>
 					<th>Exchange</th>
 					<th>Invertido</th>
 					<th>Cantidad</th>
@@ -151,52 +175,32 @@ var datatable;
 				<div class="row">
 
 					<div class="col-sm-2">
-						<div class="row">
-							<div class="col-sm-12">
-								Nombre cripto
-								<form:select id="coin" class="col-sm-12" path="coinByExchange.coin.id"></form:select>
-							</div>
-						</div>
+						Nombre cripto
+						<form:select id="coin" class="form-control" path="coinByExchange.coin.id"></form:select>
 					</div>
 					<div class="col-sm-2">
-						<div class="row">
-							<div class="col-sm-12">
-								Nombre exchange
-								<form:select id="exchange" class="col-sm-12" path="coinByExchange.exchange.id"></form:select>
-							</div>
-						</div>
+						Nombre cripto Pair
+						<form:select id="coinPair" class="form-control" path="coinByExchange.coinPair.id"></form:select>
 					</div>
 					<div class="col-sm-2">
-						<div class="row">
-							<div class="col-sm-6">
-								Cantidad
-								<form:input path="quantity" />
-							</div>
-						</div>
+						Nombre exchange
+						<form:select id="exchange" class="form-control" path="coinByExchange.exchange.id"></form:select>
 					</div>
-					<div class="col-sm-2">
-						<div class="row">
-							<div class="col-sm-6">
-								Invertido
-								<form:input path="invested" />
-							</div>
-						</div>
+					<div class="col-sm-1">
+						Cantidad
+						<form:input class="form-control" path="quantity" />
 					</div>
-					<div class="col-sm-2">
-						<div class="row">
-							<div class="col-sm-6">
-								Satoshis
-								<form:input path="satoshiBuy" />
-							</div>
-						</div>
+					<div class="col-sm-1">
+						Invertido
+						<form:input class="form-control" path="invested" />
 					</div>
-					<div class="col-sm-2">
-						<div class="row">
-							<div class="col-sm-6">
-								Fecha de compra
-								<form:input id="buyDate" path="buyDate" />
-							</div>
-						</div>
+					<div class="col-sm-1">
+						Satoshis
+						<form:input class="form-control" path="satoshiBuy" />
+					</div>
+					<div class="col-sm-1">
+						Fecha de compra
+						<form:input class="form-control" id="buyDate" path="buyDate" />
 					</div>
 				</div>
 			</div>

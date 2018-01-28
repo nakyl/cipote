@@ -17,7 +17,6 @@ import com.client.CoinMapper;
 import com.client.CoinPerUserMapper;
 import com.client.ExchangeMapper;
 import com.client.QuotationMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.jsonmodel.PriceChart;
 import com.main.CalcSatoshisHist;
 import com.model.Coin;
@@ -75,7 +74,7 @@ public class MainController extends PrincipalController {
 	@RequestMapping(value = "/getHistoricData", method = RequestMethod.GET)
 	@ResponseBody
 	public List<PriceChart> welcome(@RequestParam("idCrypto") Integer idCrypto,
-			@RequestParam("idExchange") Integer idExchange) throws JsonProcessingException {
+			@RequestParam("idExchange") Integer idExchange) {
 
 		List<PriceChart> result = new ArrayList<>();
 		for (CoinPerUser coinUser : coinPerUserservice.selectByUserCryptoExcange(getUserName(), idCrypto, idExchange)) {

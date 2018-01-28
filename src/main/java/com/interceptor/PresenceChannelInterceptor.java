@@ -12,7 +12,8 @@ import ch.qos.logback.classic.Logger;
 
 public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
 	 
-    private static final Logger LOG = (Logger) LoggerFactory.getLogger(PresenceChannelInterceptor.class);
+    private static final String USER = "User ";
+	private static final Logger LOG = (Logger) LoggerFactory.getLogger(PresenceChannelInterceptor.class);
  
     @Override
     public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
@@ -31,20 +32,22 @@ public class PresenceChannelInterceptor extends ChannelInterceptorAdapter {
             	if (LOG.isDebugEnabled()) {
             		LOG.debug("STOMP Connect [sessionId: " + sessionId + "]");
             	}
+            	UserOnline.putUser(sha.getUser().getName());
+            	LOG.info(USER + sha.getUser().getName() + " connect");
             	break;
             case CONNECTED:
             	if (LOG.isDebugEnabled()) {
             		LOG.debug("STOMP Connected [sessionId: " + sessionId + "]");
             	}
                 UserOnline.putUser(sha.getUser().getName());
-                LOG.info("User "+sha.getUser().getName()+" connected");
+                LOG.info(USER + sha.getUser().getName() + " connected");
                 break;
             case DISCONNECT:
             	if (LOG.isDebugEnabled()) {
             		LOG.debug("STOMP Disconnect [sessionId: " + sessionId + "]");
             	}
                 UserOnline.removeUser(sha.getUser().getName());
-                LOG.info("User "+sha.getUser().getName()+" disconnected");
+                LOG.info(USER + sha.getUser().getName() + " disconnected");
                 break;
             default:
                 break;
