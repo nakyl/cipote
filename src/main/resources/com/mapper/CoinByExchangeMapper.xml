@@ -16,16 +16,25 @@
     		<id column="id_exchange" jdbcType="INTEGER" property="id" />
     		<result column="nameExchange" jdbcType="VARCHAR" property="name" />
     	</association>
+		<association property="coinPair" column="id_coin_pair" javaType="com.model.Coin" >
+		    <id column="id_coin_pair" jdbcType="INTEGER" property="id" />
+		    <result column="coinpairname" jdbcType="VARCHAR" property="name" />
+		    <result column="coinpairshortname" jdbcType="VARCHAR" property="shortName" />
+		    <result column="coinpairfinal" jdbcType="VARCHAR" property="isFinal" />
+		</association>
 	</resultMap>
 	<sql id="Base_Column_List">
-		coin_by_exchange.id, 
+coin_by_exchange.id, 
 		api_name,
 		exchange.id as id_exchange,
 		exchange.name as nameExchange,
 		coin.id as id_coin,
 		coin.name,
 		coin.short_name,
-		coin_by_exchange.id_coin
+		coinPair.id as id_coin_pair,
+		coinPair.name as coinpairname,
+		coinPair.short_name as coinpairshortname,
+		coinPair.final as coinpairfinal
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
 		resultMap="BaseResultMap">
@@ -72,6 +81,9 @@
 			<if test="apiName != null">
 				api_name,
 			</if>
+			<if test="coinPair.id != null">
+				id_coin_pair,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -85,6 +97,9 @@
 			</if>
 			<if test="apiName != null">
 				#{apiName,jdbcType=VARCHAR},
+			</if>
+			<if test="coinPair.id != null">
+				#{coinPair.id,jdbcType=INTEGER},
 			</if>
 		</trim>
 	</insert>
@@ -122,6 +137,7 @@
 		from coin_by_exchange
 		INNER JOIN exchange ON coin_by_exchange.id_exchange = exchange.id
 		INNER JOIN coin ON coin_by_exchange.id_coin = coin.id
+		INNER JOIN coin as coinPair ON coin_by_exchange.id_coin_pair = coinPair.id
 	</select>
 	<select id="selectByCoinExchange" resultMap="BaseResultMap">
 		select 'false' as QUERYID,
@@ -129,6 +145,7 @@
 		from coin_by_exchange
 		INNER JOIN exchange ON coin_by_exchange.id_exchange = exchange.id
 		INNER JOIN coin ON coin_by_exchange.id_coin = coin.id
+		INNER JOIN coin as coinPair ON coin_by_exchange.id_coin_pair = coinPair.id
 		where exchange.id = #{exchangeId,jdbcType=INTEGER}
 		and coin.id = #{coinId,jdbcType=INTEGER}
 	</select>

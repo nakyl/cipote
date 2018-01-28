@@ -37,8 +37,7 @@ public class Cryptocompare {
 		if (LOG.isDebugEnabled()) {
 			LOG.debug("Calling " + PATH_API);
 		}
-		// TODO está esto correcto? por qué usamos aquí también PriceBittrex? Se está
-		// ejecutando esto?
+
 		PriceBittrex result = restTemplate.getForObject(PATH_API, PriceBittrex.class);
 
 		@SuppressWarnings("unchecked")

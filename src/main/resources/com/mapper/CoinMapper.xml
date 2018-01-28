@@ -10,6 +10,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="final" jdbcType="VARCHAR" property="isFinal" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--

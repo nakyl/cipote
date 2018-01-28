@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.websocket.ClientEndpoint;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -24,10 +25,14 @@ import com.main.UserOnline;
 import com.model.CoinByExchange;
 import com.model.Quotation;
 
+import ch.qos.logback.classic.Logger;
+
 @Configuration
 @ClientEndpoint
 @EnableScheduling
 public class BittrexApi {
+	
+	private static final Logger LOG = (Logger) LoggerFactory.getLogger(BittrexApi.class);
 
 	@Autowired
 	private CoinByExchangeMapper coinByExchangeMapper;
@@ -49,29 +54,28 @@ public class BittrexApi {
 
 			if (crypto.getExchange().getName().equals("BITTREX")) {
 
-					BigDecimal price = getPriceCoin(crypto.getCoin().getShortName());
-					Quotation record = new Quotation();
-					CoinByExchange reg = new CoinByExchange();
-					reg.setCoin(crypto.getCoin());
-					reg.setExchange(crypto.getExchange());
-					record.setCoinByExchange(reg);
-					record.setSatoshis(price);
-					record.setTimestamp(new Date());
-					quotationMapper.insertSelective(record);
-					try {
-						new CalcSatoshis().last(UserOnline.listUserOnline(), record, crypto.getExchange().getId(), crypto.getCoin().getId(), service, quotationMapper, webSocket);
-					} catch (JsonProcessingException e) {
-						// TODO Auto-generated catch block
-					}
-//				}
+				BigDecimal price = getPriceCoin(crypto.getCoin().getShortName(), crypto.getCoinPair().getShortName());
+				Quotation record = new Quotation();
+				CoinByExchange reg = new CoinByExchange();
+				reg.setCoin(crypto.getCoin());
+				reg.setExchange(crypto.getExchange());
+				record.setCoinByExchange(reg);
+				record.setSatoshis(price);
+				record.setTimestamp(new Date());
+				quotationMapper.insertSelective(record);
+				try {
+					new CalcSatoshis().last(UserOnline.listUserOnline(), record, crypto.getExchange().getId(), crypto.getCoin().getId(), service, quotationMapper, webSocket);
+				} catch (JsonProcessingException e) {
+					LOG.error("Exception", e);
+				}
 			}
 		}
 	}
 	
-	public BigDecimal getPriceCoin(String coin) {
+	public BigDecimal getPriceCoin(String shortNameCoin, String shortNameCoinPair) {
 		RestTemplate restTemplate = new RestTemplate();
 		PriceBittrex result = restTemplate
-				.getForObject(BASE_API + "/public/getticker?market=BTC-" + coin, PriceBittrex.class);
+				.getForObject(BASE_API + "/public/getticker?market="+shortNameCoinPair+"-" + shortNameCoin, PriceBittrex.class);
 		String last = ((LinkedHashMap<String, Object>) result.getAdditionalProperties().get("result"))
 				.get("Last").toString();
 		
