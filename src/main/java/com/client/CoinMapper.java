@@ -49,4 +49,6 @@ public interface CoinMapper {
 	List<Coin> selectAll();
 	
 	List<Coin> searchByName(@Param("name") String name);
+	Coin selectByShortName(@Param("shortName") String shortName);
+	
 }

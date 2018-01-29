@@ -82,7 +82,7 @@ public class MainController extends PrincipalController {
 					coinUser.getCoinByExchange().getExchange(), coinUser.getBuyDate());
 
 			Coin coin = new Coin();
-			coin.setId(1);
+			coin.setId(coinMapper.selectByShortName("BTC").getId());
 			Exchange exchange = new Exchange();
 			exchange.setId(1);
 			List<Quotation> btcList = quotationMapper.selectAllByCoinExchange(coin, exchange);

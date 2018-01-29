@@ -14,33 +14,32 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "success", "message"})
 public class PriceBinance {
 
-	@JsonProperty("code")
-	private Long code;
-	@JsonProperty("msg")
-	private String msg;
+	@JsonProperty("symbol")
+	private String symbol;
+	@JsonProperty("price")
+	private Double price;
 	@JsonIgnore
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+	private Map<String, Object> additionalProperties = new HashMap<>();
 
-	@JsonProperty("code")
-	public Long getCode() {
-		return code;
+	@JsonProperty("symbol")
+	public String getSymbol() {
+		return symbol;
 	}
 
-	@JsonProperty("code")
-	public void setCode(Long code) {
-		this.code = code;
+	@JsonProperty("symbol")
+	public void setSymbol(String symbol) {
+		this.symbol = symbol;
 	}
 
-	@JsonProperty("msg")
-	public String getMsg() {
-		return msg;
+	@JsonProperty("price")
+	public Double getPrice() {
+		return price;
 	}
 
-	@JsonProperty("msg")
-	public void setMsg(String msg) {
-		this.msg = msg;
+	@JsonProperty("price")
+	public void setPrice(Double price) {
+		this.price = price;
 	}
-
 
 	@JsonAnyGetter
 	public Map<String, Object> getAdditionalProperties() {

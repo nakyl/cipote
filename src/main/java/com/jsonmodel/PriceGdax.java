@@ -11,79 +11,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "type", "side", "order_id", "reason", "product_id", "price", "remaining_size", "sequence",
-		"time" })
+@JsonPropertyOrder({ "trade_id", "price", "size", "bid", "ask", "volume", "time" })
 public class PriceGdax {
 
-	@JsonProperty("type")
-	private String type;
-	@JsonProperty("side")
-	private String side;
-	@JsonProperty("order_id")
-	private String orderId;
-	@JsonProperty("reason")
-	private String reason;
-	@JsonProperty("product_id")
-	private String productId;
+	@JsonProperty("trade_id")
+	private Integer tradeId;
 	@JsonProperty("price")
 	private String price;
-	@JsonProperty("remaining_size")
-	private String remainingSize;
-	@JsonProperty("sequence")
-	private Long sequence;
+	@JsonProperty("size")
+	private String size;
+	@JsonProperty("bid")
+	private String bid;
+	@JsonProperty("ask")
+	private String ask;
+	@JsonProperty("volume")
+	private String volume;
 	@JsonProperty("time")
 	private String time;
 	@JsonIgnore
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+	private Map<String, Object> additionalProperties = new HashMap<>();
 
-	@JsonProperty("type")
-	public String getType() {
-		return type;
+	@JsonProperty("trade_id")
+	public Integer getTradeId() {
+		return tradeId;
 	}
 
-	@JsonProperty("type")
-	public void setType(String type) {
-		this.type = type;
+	@JsonProperty("trade_id")
+	public void setTradeId(Integer tradeId) {
+		this.tradeId = tradeId;
 	}
 
-	@JsonProperty("side")
-	public String getSide() {
-		return side;
-	}
-
-	@JsonProperty("side")
-	public void setSide(String side) {
-		this.side = side;
-	}
-
-	@JsonProperty("order_id")
-	public String getOrderId() {
-		return orderId;
-	}
-
-	@JsonProperty("order_id")
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
-	@JsonProperty("reason")
-	public String getReason() {
-		return reason;
-	}
-
-	@JsonProperty("reason")
-	public void setReason(String reason) {
-		this.reason = reason;
-	}
-
-	@JsonProperty("product_id")
-	public String getProductId() {
-		return productId;
-	}
-
-	@JsonProperty("product_id")
-	public void setProductId(String productId) {
-		this.productId = productId;
+	public PriceGdax withTradeId(Integer tradeId) {
+		this.tradeId = tradeId;
+		return this;
 	}
 
 	@JsonProperty("price")
@@ -96,24 +56,69 @@ public class PriceGdax {
 		this.price = price;
 	}
 
-	@JsonProperty("remaining_size")
-	public String getRemainingSize() {
-		return remainingSize;
+	public PriceGdax withPrice(String price) {
+		this.price = price;
+		return this;
 	}
 
-	@JsonProperty("remaining_size")
-	public void setRemainingSize(String remainingSize) {
-		this.remainingSize = remainingSize;
+	@JsonProperty("size")
+	public String getSize() {
+		return size;
 	}
 
-	@JsonProperty("sequence")
-	public Long getSequence() {
-		return sequence;
+	@JsonProperty("size")
+	public void setSize(String size) {
+		this.size = size;
 	}
 
-	@JsonProperty("sequence")
-	public void setSequence(Long sequence) {
-		this.sequence = sequence;
+	public PriceGdax withSize(String size) {
+		this.size = size;
+		return this;
+	}
+
+	@JsonProperty("bid")
+	public String getBid() {
+		return bid;
+	}
+
+	@JsonProperty("bid")
+	public void setBid(String bid) {
+		this.bid = bid;
+	}
+
+	public PriceGdax withBid(String bid) {
+		this.bid = bid;
+		return this;
+	}
+
+	@JsonProperty("ask")
+	public String getAsk() {
+		return ask;
+	}
+
+	@JsonProperty("ask")
+	public void setAsk(String ask) {
+		this.ask = ask;
+	}
+
+	public PriceGdax withAsk(String ask) {
+		this.ask = ask;
+		return this;
+	}
+
+	@JsonProperty("volume")
+	public String getVolume() {
+		return volume;
+	}
+
+	@JsonProperty("volume")
+	public void setVolume(String volume) {
+		this.volume = volume;
+	}
+
+	public PriceGdax withVolume(String volume) {
+		this.volume = volume;
+		return this;
 	}
 
 	@JsonProperty("time")
@@ -126,6 +131,11 @@ public class PriceGdax {
 		this.time = time;
 	}
 
+	public PriceGdax withTime(String time) {
+		this.time = time;
+		return this;
+	}
+
 	@JsonAnyGetter
 	public Map<String, Object> getAdditionalProperties() {
 		return this.additionalProperties;
@@ -136,4 +146,8 @@ public class PriceGdax {
 		this.additionalProperties.put(name, value);
 	}
 
+	public PriceGdax withAdditionalProperty(String name, Object value) {
+		this.additionalProperties.put(name, value);
+		return this;
+	}
 }

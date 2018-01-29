@@ -2,6 +2,8 @@ package com.client;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.model.Exchange;
 
 public interface ExchangeMapper {
@@ -53,7 +55,7 @@ public interface ExchangeMapper {
      */
     int updateByPrimaryKey(Exchange record);
     
-    Exchange selectByName(Exchange record);
+    Exchange selectByName(@Param("exchange") String exchange);
     
     List<Exchange> selectAll();
 }
