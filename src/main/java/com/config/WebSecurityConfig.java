@@ -33,8 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    	User.withUsername("a").password("a").roles("USER").build();
-    	User.withUsername("b").password("b").roles("USER").build();
+    	User.withUsername("a").password("a").roles("ADMIN").build();
     }
     
     @Bean

@@ -9,6 +9,7 @@ import java.util.Map;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import com.client.CoinMapper;
 import com.client.CoinPerUserMapper;
 import com.client.QuotationMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,12 +27,12 @@ public class CalcSatoshis {
 	
 	private static final Logger LOG = (Logger) LoggerFactory.getLogger(CalcSatoshis.class);
 	
-	public void last(List<String> list, Quotation record, Integer idExchange, Integer idCrypto, CoinPerUserMapper service, QuotationMapper quotationMapper, SimpMessagingTemplate webSocket) throws JsonProcessingException {
+	public void last(List<String> list, Quotation record, Integer idExchange, Integer idCrypto, CoinPerUserMapper service, QuotationMapper quotationMapper, SimpMessagingTemplate webSocket, CoinMapper coinMapper) throws JsonProcessingException {
 		
 		CoinByExchange reg = new CoinByExchange();
 		Quotation quot = new Quotation();
 		Coin coin = new Coin();
-		coin.setId(1);
+		coin.setId(coinMapper.selectByShortName("BTC").getId());
 		reg.setCoin(coin);
 		Exchange exchange = new Exchange();
 		exchange.setId(1);

@@ -115,6 +115,13 @@
     from coin
     where name = #{name,jdbcType=VARCHAR}
   </select>
+  
+  <select id="selectByShortName" parameterType="java.lang.String" resultMap="coinMap">
+    select 'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from coin
+    where short_name = #{shortName,jdbcType=VARCHAR}
+  </select>
   <select id="selectAll" resultMap="coinMap">
     select 'false' as QUERYID,
     <include refid="Base_Column_List" />

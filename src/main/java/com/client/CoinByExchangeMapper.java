@@ -47,4 +47,6 @@ public interface CoinByExchangeMapper {
 	List<CoinByExchange> getAll();
 	
 	CoinByExchange selectByCoinExchange(@Param("coinId") Integer coinId, @Param("exchangeId") Integer exchangeId);
+	
+	List<CoinByExchange> selectByExchange(@Param("exchange") Integer exchange);
 }

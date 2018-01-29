@@ -89,10 +89,10 @@ public class CoinPerUserConfigController extends PrincipalController {
 					Coin coin = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoin().getId());
 					Coin coinPair = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoinPair().getId());
 
-					BigDecimal price = new BittrexApi().getPriceCoin(coin.getShortName(), coinPair.getShortName());
+					BigDecimal price = BittrexApi.getPriceCoin(coin.getShortName(), coinPair.getShortName());
 
 					if (price != null) {
-						insertAndResponse(registroEditado, response, exchange, coin);
+						insertAndResponse(registroEditado, response, exchange, coin, coinPair);
 					} else {
 						// Si no existe la moneda en el exchange informamos de error
 						response.setValidated(Boolean.FALSE);
@@ -103,10 +103,10 @@ public class CoinPerUserConfigController extends PrincipalController {
 					Coin coin = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoin().getId());
 					Coin coinPair = coinMapper.selectByPrimaryKey(registroEditado.getCoinByExchange().getCoinPair().getId());
 					
-					BigDecimal price = new BinanceApi().getPriceCoin(coin.getShortName(), coinPair.getShortName());
+					BigDecimal price = BinanceApi.getPriceCoin(coin.getShortName(), coinPair.getShortName());
 					
 					if (price != null) {
-						insertAndResponse(registroEditado, response, exchange, coin);
+						insertAndResponse(registroEditado, response, exchange, coin, coinPair);
 					} else {
 						// Si no existe la moneda en el exchange informamos de error
 						response.setValidated(Boolean.FALSE);
@@ -130,11 +130,11 @@ public class CoinPerUserConfigController extends PrincipalController {
 	}
 
 	private void insertAndResponse(CoinPerUser registroEditado, CoinPerUserConfigResponse response, Exchange exchange,
-			Coin coin) {
+			Coin coin, Coin coinPair) {
 		CoinByExchange reg = new CoinByExchange();
 		reg.setCoin(coin);
 		reg.setExchange(exchange);
-		reg.setApiName(coin.getShortName() + "BTC");
+		reg.setCoinPair(coinPair);
 		// Insertamos la combinación de moneda/exchange
 		coinByExchangeMapper.insertSelective(reg);
 		

@@ -13,7 +13,6 @@
     <result column="timestamp" jdbcType="TIMESTAMP" property="timestamp" />
     <association property="coinByExchange" column="id_coin_by_exchange" javaType="com.model.CoinByExchange" >
 		<id column="id" jdbcType="INTEGER" property="id" />
-		<result column="api_name" jdbcType="VARCHAR" property="apiName" />
 	</association>
 		<association property="coinByExchange.coinPair" column="id_coin_pair" javaType="com.model.Coin" >
 			<result column="idcoinpair" jdbcType="VARCHAR" property="id" />
