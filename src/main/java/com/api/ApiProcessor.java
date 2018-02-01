@@ -86,7 +86,6 @@ public class ApiProcessor {
 	}
 
 	private void sendSocketMessage(Quotation record, CoinByExchange crypto) throws JsonProcessingException {
-		new CalcSatoshis().last(UserOnline.listUserOnline(), record, crypto.getExchange().getId(),
-				crypto.getCoin().getId(), service, quotationMapper, webSocket, coinMapper);
+		new CalcSatoshis().last(UserOnline.listUserOnline(), record, crypto, service, quotationMapper, webSocket, coinMapper);
 	}
 }
