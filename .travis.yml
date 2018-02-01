@@ -6,35 +6,8 @@ sudo: required
 jdk:
   - oraclejdk8
   
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: $COVERITY_SCAN_TOKEN
-
-before_install:
-      - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
-
-addons:
-  sonarqube:
-    organization: "spenalva-github"
-    token:
-      secure: $SONAR_TOKEN
-    github_token:
-      secure: $SONAR_GITHUB_TOKEN
-  coverity_scan:
-    project:
-      name: "spenalva/cipote"
-      description: "Build submitted via Travis CI"
-    notification_email: spenalvaps@gmail.com
-    build_command_prepend: "mvn clean"
-    build_command:   "mvn -DskipTests=true compile"
-    branch_pattern: "*"
-  
 script: 
   - mvn clean install
-  #coveralls:report jacoco:prepare-agent
-  - mvn sonar:sonar
 
 cache:
   directories:
