@@ -1,6 +1,7 @@
 package com.api;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.websocket.ClientEndpoint;
 
@@ -12,9 +13,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.client.RestTemplate;
 
 import com.client.CoinByExchangeMapper;
-import com.client.CoinMapper;
 import com.jsonmodel.PriceGdax;
 import com.model.CoinByExchange;
+import com.model.Exchange;
 
 import ch.qos.logback.classic.Logger;
 
@@ -25,8 +26,6 @@ public class GdaxApi extends ApiProcessor {
 
 	@Autowired
 	private CoinByExchangeMapper coinByExchangeMapper;
-	@Autowired
-	private CoinMapper coinMapper;
 	
 	private static final String EXCHANGE_NAME = "GDAX";
 
@@ -37,13 +36,20 @@ public class GdaxApi extends ApiProcessor {
 		LOG.info("INIT - startGdax");
 
 		RestTemplate restTemplate = new RestTemplate();
+		
+		Exchange exchange = getExchangeByName(EXCHANGE_NAME);
+		List<CoinByExchange> list = getListByIdExchange(exchange.getId());
 
-		PriceGdax result = restTemplate.getForObject(getUrlApiByExchangeName(EXCHANGE_NAME, "BTC", "EUR"), PriceGdax.class);
-		
-		CoinByExchange reg = coinByExchangeMapper.selectByCoinExchange(coinMapper.selectByShortName("BTC").getId(), 1);
-		
-		String last = result.getPrice();
-		insertQuotaAndSend(reg, new BigDecimal(last));
+		for (CoinByExchange crypto : list) {
+			PriceGdax result = restTemplate.getForObject(getUrlApiByExchangeName(EXCHANGE_NAME, crypto.getCoin().getShortName(), crypto.getCoinPair().getShortName()), PriceGdax.class);
+			
+			CoinByExchange reg = coinByExchangeMapper.selectByCoinExchange(crypto.getCoin().getId(), exchange.getId());
+			
+			String last = result.getPrice();
+			insertQuotaAndSend(reg, new BigDecimal(last));
+		}
+
+
 
 		LOG.info("END - startGdax");
 	}

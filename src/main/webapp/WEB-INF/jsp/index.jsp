@@ -8,6 +8,9 @@
 #navbar {
     position: fixed;
     z-index:1;
+    max-height: 90%;
+    overflow-y: auto;
+    max-width:100%;
 }
 
 @keyframes shadowPulse2 {
@@ -261,18 +264,18 @@ function createChart(idContainer, idCrypto, idExchange, name) {
 
 </script>
 
-<div class="row" style="margin-top:-8px;">
+<div class="row" style="margin-top:-8px">
 	<div class="col-2 bg-dark">
-			<nav class="nav navbar-dark navbar-expand-sm" id="navbar">
+			<nav class=" bg-dark nav navbar-dark navbar-expand-sm" id="navbar">
 			  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNavDropdownLeft" aria-controls="navbarNavDropdownLeft" aria-expanded="false" aria-label="Toggle navigation">
 			    <span class="navbar-toggler-icon"></span>
 			  </button>
-				<div class="flex-column mt-md-0 mt-4 pt-md-0 pt-4 collapse navbar-collapse" style="align-items: initial;" id="navbarNavDropdownLeft">
+				<div class="flex-column mt-md-0 collapse navbar-collapse" style="align-items: initial;" id="navbarNavDropdownLeft">
 					<c:forEach items="${crypto}" varStatus="item">
-						<a class="nav-link text-secondary" href="#container${item.current.coinByExchange.coin.id}">
+						<a class="nav-link text-secondary small" href="#container${item.current.coinByExchange.coin.id}">
 							${item.current.coinByExchange.coin.formatedName}
-							<div class="small pl-3">
-								<div class="text-primary">Invertido: ${item.current.invested}€</div>
+							<div class="pl-3">
+								<%-- <div class="text-primary">Invertido: ${item.current.invested}€</div>--%>
 								<div class="text-info">Cantidad: ${item.current.quantity}</div>
 								<div id="stats${item.current.coinByExchange.coin.id}"></div>
 							</div>
@@ -293,4 +296,3 @@ function createChart(idContainer, idCrypto, idExchange, name) {
 		</div>
 	</div>
 </div>
-<jsp:include page="footer.jsp" />
