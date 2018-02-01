@@ -46,3 +46,7 @@ email: false
 branches:
     only:
     - master
+deploy:
+  provider: heroku
+  api_key: $HEROKU_API_KEY
+app: cipote
