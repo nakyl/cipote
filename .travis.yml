@@ -23,4 +23,4 @@ deploy:
   provider: heroku
   api_key: 
     secure:$HEROKU_API_KEY
-app: cipote
+app: enigmatic-escarpment-29451
