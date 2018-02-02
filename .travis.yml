@@ -19,8 +19,14 @@ email: false
 branches:
     only:
     - master
-deploy:
-  provider: heroku
-  api_key: 
-    secure:$HEROKU_API_KEY
-app: enigmatic-escarpment-29451
+
+services:
+  - docker
+
+after_success:
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
+- export IMAGE_NAME=nakylara/cipote
+- docker build -t $IMAGE_NAME:$COMMIT .
+- docker tag $IMAGE_NAME:$COMMIT $IMAGE_NAME:$TAG
+- docker push $IMAGE_NAME
